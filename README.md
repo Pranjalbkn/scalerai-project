@@ -2,6 +2,12 @@
 
 Stayly is an original full-stack vacation-rental marketplace built for the supplied SDE assignment. It recreates Airbnb's photo-forward browsing and booking patterns without copying Airbnb source code. The application includes persistent listings, availability-aware search, a complete mocked booking flow, wishlists, trips, and a host CRUD dashboard.
 
+## Live demo
+
+- Application: https://stayly-web-nine.vercel.app
+- API health: https://stayly-api-lpiq.onrender.com/api/health
+- Interactive API documentation: https://stayly-api-lpiq.onrender.com/docs
+
 ## Stack
 
 - **Frontend:** Next.js 15 App Router, React 19, TypeScript, CSS, Lucide icons
