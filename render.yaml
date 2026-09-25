@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+services:
+  - type: web
+    name: stayly-api
+    runtime: python
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    numInstances: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: DATABASE_URL
+        value: sqlite:////var/data/stayly.db
+      - key: ALLOWED_ORIGINS
+        sync: false
+    disk:
+      name: stayly-data
+      mountPath: /var/data
+      sizeGB: 1
+    buildFilter:
+      paths:
+        - backend/**
+        - render.yaml
+      ignoredPaths:
+        - frontend/**
+        - README.md
+
