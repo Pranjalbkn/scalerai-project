@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Star } from "lucide-react";
+import { ChevronRight, Heart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
@@ -35,6 +35,7 @@ export default function ListingCard({ listing, onFavoriteChange }: { listing: Li
           <Heart size={24} fill={favorite ? "#ff385c" : "rgba(0,0,0,.35)"} />
         </button>
         <span className="guest-favourite">Guest favourite</span>
+        <span className="card-next" aria-hidden="true"><ChevronRight size={16} /></span>
         <div className="image-dots"><i className="active" /><i /><i /></div>
       </div>
       <div className="card-info">
@@ -46,4 +47,3 @@ export default function ListingCard({ listing, onFavoriteChange }: { listing: Li
     </Link>
   );
 }
-

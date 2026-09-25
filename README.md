@@ -16,6 +16,7 @@ Stayly is an original full-stack vacation-rental marketplace built for the suppl
 - Paginated results and persisted favourites
 - Listing galleries, host details, amenities, reviews, a location preview, and detailed pricing
 - Booking validation for past dates, guest capacity, and overlapping reservations
+- Airbnb-style availability calendar that visibly disables past and reserved dates
 - Mock checkout with confirmation code and a persistent My Trips page
 - Host dashboard with listing creation, editing, deletion, reservation visibility, and revenue summary
 - Seeded hosts, guests, 12 properties, galleries, reviews, and an existing reservation
@@ -137,12 +138,12 @@ pnpm build
 
 A practical deployment is:
 
-1. Connect the repository to Render and apply the root-level `render.yaml` Blueprint. It creates the Python API, health check, and a persistent disk for SQLite.
-2. Set the Blueprint's `ALLOWED_ORIGINS` value to the final Vercel URL, without a trailing slash.
-3. Import the repository into Vercel, choose `frontend` as the root directory, and set `NEXT_PUBLIC_API_URL=https://<render-service-domain>/api`.
-4. Redeploy both services and run the booking smoke test described below.
+1. Connect the repository to Render and apply the root-level `render.yaml` Blueprint.
+2. The Blueprint creates the Next.js frontend, FastAPI backend, and a managed PostgreSQL database on Render's free plans.
+3. Render wires the public service hostnames and database connection automatically; no secrets need to be copied manually.
+4. When both services show `Live`, run the booking smoke test described below.
 
-The Render disk preserves bookings across restarts but restricts the API to one instance and disables zero-downtime deploys. That tradeoff is appropriate for this SQLite assignment demo; a production marketplace should use managed PostgreSQL.
+Local development continues to use SQLite. The hosted environment uses PostgreSQL so bookings and listings survive web-service restarts. Render's free PostgreSQL databases currently expire after 30 days, which is suitable for an assignment demo but should be upgraded for a long-lived production deployment.
 
 ### Post-deployment smoke test
 

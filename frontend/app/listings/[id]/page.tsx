@@ -40,7 +40,7 @@ export default function ListingDetailPage() {
       <div className="detail-back"><Link href="/"><ChevronLeft size={18} /> All homes</Link></div>
       <div className="detail-title"><div><h1>{listing.title}</h1><div className="detail-subline"><span><Star size={14} fill="currentColor" /> {listing.rating}</span><u>{listing.review_count} reviews</u><span>·</span><u>{listing.city}, {listing.country}</u></div></div><div className="detail-actions"><button onClick={() => navigator.clipboard.writeText(window.location.href).then(() => setToast("Link copied"))}><Share size={17} /> Share</button><button onClick={favorite}><Heart size={18} fill={listing.is_favorite ? "#ff385c" : "none"} color={listing.is_favorite ? "#ff385c" : "currentColor"} /> Save</button></div></div>
       <div className="photo-grid">
-        {photos.slice(0, 5).map((photo, index) => <button key={photo.url} className={`photo-${index + 1}`} onClick={() => setGallery(true)}><Image fill sizes={index === 0 ? "50vw" : "25vw"} src={photo.url} alt={photo.alt_text} /></button>)}
+        {photos.slice(0, 5).map((photo, index) => <button key={`${photo.url}-${index}`} className={`photo-${index + 1}`} onClick={() => setGallery(true)}><Image fill sizes={index === 0 ? "50vw" : "25vw"} src={photo.url} alt={photo.alt_text} /></button>)}
         <button className="show-photos" onClick={() => setGallery(true)}><Grid3X3 size={17} /> Show all photos</button>
       </div>
       <div className="detail-content">
@@ -55,9 +55,8 @@ export default function ListingDetailPage() {
         </div>
         <aside><BookingCard listing={listing} /></aside>
       </div>
-      {gallery && <div className="gallery-overlay"><button className="gallery-close" onClick={() => setGallery(false)}>×</button><h2>{listing.title}</h2><div>{photos.map((photo) => <Image key={photo.url} src={photo.url} alt={photo.alt_text} width={1000} height={700} />)}</div></div>}
+      {gallery && <div className="gallery-overlay"><button className="gallery-close" onClick={() => setGallery(false)}>×</button><h2>{listing.title}</h2><div>{photos.map((photo, index) => <Image key={`${photo.url}-${index}`} src={photo.url} alt={photo.alt_text} width={1000} height={700} />)}</div></div>}
       {toast && <Toast message={toast} onClose={() => setToast("")} />}
     </div>
   );
 }
-

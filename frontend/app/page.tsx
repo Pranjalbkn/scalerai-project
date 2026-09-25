@@ -53,7 +53,6 @@ function HomeContent() {
   return (
     <>
       <section className="search-hero">
-        <div className="hero-copy"><span className="eyebrow">YOUR NEXT STORY STARTS HERE</span><h1>Stay somewhere<br />unforgettable.</h1><p>Handpicked homes, thoughtful hosts, and room to wander.</p></div>
         <SearchBar />
       </section>
       <Categories active={category} onChange={setCategory} onFilters={() => setFilterOpen(true)} />
@@ -76,4 +75,3 @@ function HomeContent() {
 export default function HomePage() {
   return <Suspense fallback={<div className="page-loader">Finding beautiful places…</div>}><HomeContent /></Suspense>;
 }
-

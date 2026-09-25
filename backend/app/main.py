@@ -31,7 +31,7 @@ app = FastAPI(
 )
 
 allowed_origins = [
-    origin.strip().rstrip("/")
+    (origin.strip().rstrip("/") if "://" in origin else f"https://{origin.strip().rstrip('/')}")
     for origin in os.getenv(
         "ALLOWED_ORIGINS",
         "http://localhost:3000,http://127.0.0.1:3000",

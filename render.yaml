@@ -3,7 +3,7 @@ services:
   - type: web
     name: stayly-api
     runtime: python
-    plan: starter
+    plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -14,13 +14,14 @@ services:
       - key: PYTHON_VERSION
         value: 3.12.14
       - key: DATABASE_URL
-        value: sqlite:////var/data/stayly.db
+        fromDatabase:
+          name: stayly-database
+          property: connectionString
       - key: ALLOWED_ORIGINS
-        sync: false
-    disk:
-      name: stayly-data
-      mountPath: /var/data
-      sizeGB: 1
+        fromService:
+          type: web
+          name: stayly-web
+          envVarKey: RENDER_EXTERNAL_HOSTNAME
     buildFilter:
       paths:
         - backend/**
@@ -29,3 +30,33 @@ services:
         - frontend/**
         - README.md
 
+  - type: web
+    name: stayly-web
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start --hostname 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: 22.20.0
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: stayly-api
+          envVarKey: RENDER_EXTERNAL_HOSTNAME
+    buildFilter:
+      paths:
+        - frontend/**
+        - render.yaml
+      ignoredPaths:
+        - backend/**
+        - README.md
+
+databases:
+  - name: stayly-database
+    plan: free
+    databaseName: stayly
+    user: stayly

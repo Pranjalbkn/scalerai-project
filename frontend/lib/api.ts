@@ -1,6 +1,9 @@
 import { Booking, Listing, ListingPage, ListingPayload } from "./types";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const configuredApi = process.env.NEXT_PUBLIC_API_URL;
+export const API_URL = configuredApi
+  ? configuredApi.includes("://") ? configuredApi : `https://${configuredApi}/api`
+  : "http://localhost:8000/api";
 export const DEMO_GUEST_ID = 1;
 export const DEMO_HOST_ID = 2;
 
@@ -36,4 +39,3 @@ export async function saveListing(payload: ListingPayload, id?: number) {
     body: JSON.stringify(payload),
   });
 }
-

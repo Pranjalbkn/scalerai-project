@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { api, DEMO_GUEST_ID } from "@/lib/api";
 import { Booking, Listing } from "@/lib/types";
+import AvailabilityCalendar from "./AvailabilityCalendar";
 import Toast from "./Toast";
 
 export default function BookingCard({ listing }: { listing: Listing }) {
@@ -19,8 +20,6 @@ export default function BookingCard({ listing }: { listing: Listing }) {
   const nights = useMemo(() => checkIn && checkOut ? Math.max(0, differenceInCalendarDays(new Date(`${checkOut}T00:00:00`), new Date(`${checkIn}T00:00:00`))) : 0, [checkIn, checkOut]);
   const subtotal = nights * listing.price_per_night;
   const total = subtotal + listing.cleaning_fee + listing.service_fee;
-  const today = format(new Date(), "yyyy-MM-dd");
-
   useEffect(() => { if (!checkIn) setCheckOut(""); }, [checkIn]);
 
   async function reserve(e: FormEvent) {
@@ -38,11 +37,8 @@ export default function BookingCard({ listing }: { listing: Listing }) {
   return (
     <form className="booking-card" onSubmit={reserve}>
       <div className="booking-top"><div><strong>${listing.price_per_night}</strong> <span>night</span></div><div><Star size={14} fill="currentColor" /> {listing.rating} · <u>{listing.review_count} reviews</u></div></div>
-      <div className="date-box">
-        <label><span>CHECK-IN</span><input type="date" min={today} value={checkIn} onChange={(e) => setCheckIn(e.target.value)} /></label>
-        <label><span>CHECKOUT</span><input type="date" min={checkIn || today} value={checkOut} onChange={(e) => setCheckOut(e.target.value)} /></label>
-        <label className="guest-select"><span>GUESTS</span><select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>{Array.from({ length: listing.max_guests }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1} guest{i ? "s" : ""}</option>)}</select><ChevronDown size={17} /></label>
-      </div>
+      <AvailabilityCalendar listingId={listing.id} checkIn={checkIn} checkOut={checkOut} onChange={(start, end) => { setCheckIn(start); setCheckOut(end); setError(""); }} />
+      <label className="guest-select standalone-guest"><span>GUESTS</span><select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>{Array.from({ length: listing.max_guests }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1} guest{i ? "s" : ""}</option>)}</select><ChevronDown size={17} /></label>
       {error && <p className="form-error">{error}</p>}
       <button className="reserve-button" disabled={busy}>{busy ? "Confirming…" : "Reserve"}</button>
       <p className="charge-note">You won’t be charged yet</p>
@@ -52,4 +48,3 @@ export default function BookingCard({ listing }: { listing: Listing }) {
     </form>
   );
 }
-
